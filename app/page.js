@@ -4,7 +4,9 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import BrandStory from "@/components/BrandStory";
 import CategoryHighlights from "@/components/CategoryHighlights";
 import TrustStrip from "@/components/TrustStrip";
+import FAQSection from "@/components/FAQSection";
 import SocialSection from "@/components/SocialSection";
+import { faqPageJsonLd } from "@/lib/faq";
 import { buildMetadata, organizationJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -24,12 +26,20 @@ export default function HomePage() {
           __html: JSON.stringify(organizationJsonLd()),
         }}
       />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqPageJsonLd()),
+        }}
+      />
       <AnnouncementStrip />
       <Hero />
       <FeaturedProducts />
       <BrandStory />
       <CategoryHighlights />
       <TrustStrip />
+      <FAQSection />
       <SocialSection />
     </>
   );
