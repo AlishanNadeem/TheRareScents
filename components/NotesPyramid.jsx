@@ -4,8 +4,13 @@ const TIERS = [
   { key: "base", label: "Base Notes", widthClass: "max-w-full" },
 ];
 
+export function hasFragranceNotes(notes) {
+  if (!notes) return false;
+  return TIERS.some((tier) => (notes[tier.key] ?? []).length > 0);
+}
+
 export default function NotesPyramid({ notes }) {
-  if (!notes) return null;
+  if (!hasFragranceNotes(notes)) return null;
 
   return (
     <div className="space-y-4">

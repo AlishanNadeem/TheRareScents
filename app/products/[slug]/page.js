@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
-import NotesPyramid from "@/components/NotesPyramid";
+import NotesPyramid, { hasFragranceNotes } from "@/components/NotesPyramid";
 import OrderForm from "@/components/OrderForm";
 import RelatedProducts from "@/components/RelatedProducts";
 import { Reveal } from "@/components/Reveal";
@@ -159,9 +159,11 @@ export default async function ProductPage({ params }) {
                 )}
               </p>
 
-              <div className="mt-8 rounded-xl bg-ink/5 p-6">
-                <NotesPyramid notes={product.notes} />
-              </div>
+              {hasFragranceNotes(product.notes) && (
+                <div className="mt-8 rounded-xl bg-ink/5 p-6">
+                  <NotesPyramid notes={product.notes} />
+                </div>
+              )}
 
               <a
                 href={whatsappHref}
