@@ -4,6 +4,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import BrandStory from "@/components/BrandStory";
 import CategoryHighlights from "@/components/CategoryHighlights";
 import TrustStrip from "@/components/TrustStrip";
+import Testimonials from "@/components/Testimonials";
 import FAQSection from "@/components/FAQSection";
 import SocialSection from "@/components/SocialSection";
 import { faqPageJsonLd } from "@/lib/faq";
@@ -39,6 +40,7 @@ export default function HomePage() {
       <BrandStory />
       <CategoryHighlights />
       <TrustStrip />
+      <Testimonials />
       <FAQSection />
       <SocialSection />
     </>
