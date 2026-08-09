@@ -1,3 +1,4 @@
+import AnnouncementStrip from "@/components/AnnouncementStrip";
 import Hero from "@/components/Hero";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import BrandStory from "@/components/BrandStory";
@@ -23,6 +24,7 @@ export default function HomePage() {
           __html: JSON.stringify(organizationJsonLd()),
         }}
       />
+      <AnnouncementStrip />
       <Hero />
       <FeaturedProducts />
       <BrandStory />

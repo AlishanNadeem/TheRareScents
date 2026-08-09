@@ -46,3 +46,38 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Homepage announcement ticker — seamless right-to-left loop.
+   Track contains two identical sequences; animating -50% resets
+   without a visible jump. */
+@keyframes announcement-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.announcement-track {
+  animation: announcement-scroll 45s linear infinite;
+  will-change: transform;
+}
+
+.announcement-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-animated {
+    display: none;
+  }
+
+  .announcement-static {
+    display: block;
+  }
+
+  .announcement-track {
+    animation: none;
+  }
+}
