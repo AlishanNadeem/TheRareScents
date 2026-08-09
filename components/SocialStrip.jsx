@@ -24,20 +24,11 @@ const icons = {
       />
     </svg>
   ),
-  tiktok: (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M15.5 3c.35 1.9 1.6 3.15 3.5 3.35v2.6c-1.24.05-2.4-.32-3.5-1v6.3a4.75 4.75 0 1 1-4.75-4.75c.26 0 .5.02.75.06v2.68a2.1 2.1 0 1 0 1.45 2v-11.2h2.55Z"
-        fill="currentColor"
-      />
-    </svg>
-  ),
 };
 
 const socialLinks = [
   { key: "instagram", label: "Instagram", href: siteConfig.social.instagram },
   { key: "facebook", label: "Facebook", href: siteConfig.social.facebook },
-  { key: "tiktok", label: "TikTok", href: siteConfig.social.tiktok },
 ];
 
 export default function SocialStrip({ className = "" }) {
