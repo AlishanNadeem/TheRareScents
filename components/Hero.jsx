@@ -21,7 +21,7 @@ export default function Hero() {
         aria-hidden="true"
       />
       {/* Dark overlay so the logo, tagline, and CTA stay readable over the photo. */}
-      <div className="absolute inset-0 bg-ink/60" aria-hidden="true" />
+      <div className="absolute inset-0 bg-ink/75" aria-hidden="true" />
 
       <motion.div
         className="relative mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center sm:py-32"
