@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/siteConfig";
 
 export default function ProductCard({ product, priority = false }) {
   return (
-    <article className="group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition hover:shadow-md">
+    <article className="group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition duration-300 ease-out hover:scale-105 hover:shadow-lg motion-reduce:hover:scale-100">
       <Link
         href={`/products/${product.slug}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
@@ -17,7 +17,7 @@ export default function ProductCard({ product, priority = false }) {
             fill
             priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className="object-cover transition duration-300 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
           />
           {!product.in_stock && (
             <span className="absolute left-2 top-2 rounded-full bg-ink/85 px-2 py-1 text-xs font-medium text-paper">

@@ -26,17 +26,26 @@ export default function SiteFooter() {
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-gold">
+                <Link
+                  href="/"
+                  className="transition-colors duration-300 hover:text-gold"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-gold">
+                <Link
+                  href="/products"
+                  className="transition-colors duration-300 hover:text-gold"
+                >
                   Shop All
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-gold">
+                <Link
+                  href="/contact"
+                  className="transition-colors duration-300 hover:text-gold"
+                >
                   Contact Us
                 </Link>
               </li>
@@ -44,7 +53,7 @@ export default function SiteFooter() {
                 <li key={category.slug}>
                   <Link
                     href={`/products?category=${category.slug}`}
-                    className="hover:text-gold"
+                    className="transition-colors duration-300 hover:text-gold"
                   >
                     {category.label}
                   </Link>
@@ -63,7 +72,7 @@ export default function SiteFooter() {
                   href={siteConfig.whatsapp.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gold"
+                  className="transition-colors duration-300 hover:text-gold"
                 >
                   WhatsApp: {siteConfig.whatsapp.display}
                 </a>
@@ -71,7 +80,7 @@ export default function SiteFooter() {
               <li>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="hover:text-gold"
+                  className="transition-colors duration-300 hover:text-gold"
                 >
                   {siteConfig.email}
                 </a>

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
+import { Reveal } from "@/components/Reveal";
 import { siteConfig } from "@/lib/siteConfig";
 
 const SORT_OPTIONS = [
@@ -12,9 +13,9 @@ const SORT_OPTIONS = [
 ];
 
 function pillClasses(active) {
-  return `rounded-full px-4 py-1.5 text-sm transition ${
+  return `rounded-full px-4 py-1.5 text-sm transition duration-300 ease-out ${
     active
-      ? "bg-ink text-paper"
+      ? "bg-ink text-paper shadow-sm"
       : "border border-ink/20 text-ink hover:bg-ink/10"
   }`;
 }
@@ -50,16 +51,18 @@ export default function ProductCatalog({ products }) {
 
   return (
     <div>
-      <header className="text-center">
-        <h1 className="font-display text-3xl text-ink sm:text-4xl">
-          {activeCategory ? activeCategory.label : "Shop All Fragrances"}
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
-          {activeCategory
-            ? activeCategory.description
-            : `Original perfumes, oud & attars — curated and delivered across ${siteConfig.country}.`}
-        </p>
-      </header>
+      <Reveal>
+        <header className="text-center">
+          <h1 className="font-display text-3xl text-ink sm:text-4xl">
+            {activeCategory ? activeCategory.label : "Shop All Fragrances"}
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
+            {activeCategory
+              ? activeCategory.description
+              : `Original perfumes, oud & attars — curated and delivered across ${siteConfig.country}.`}
+          </p>
+        </header>
+      </Reveal>
 
       <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <nav

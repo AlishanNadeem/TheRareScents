@@ -1,4 +1,5 @@
 import OrderForm from "@/components/OrderForm";
+import { Reveal } from "@/components/Reveal";
 import { siteConfig } from "@/lib/siteConfig";
 import { buildMetadata, organizationJsonLd } from "@/lib/seo";
 
@@ -20,20 +21,22 @@ export default function ContactPage() {
       />
 
       <div className="mx-auto max-w-6xl px-6 py-14 sm:py-16">
-        <header className="text-center">
-          <h1 className="font-display text-3xl text-ink sm:text-4xl">
-            Contact {siteConfig.name}
-          </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
-            We&apos;re an online store — order via WhatsApp or the form below,
-            and we&apos;ll get back to you shortly. No showroom, no fixed hours
-            — just message us any time.
-          </p>
-        </header>
+        <Reveal>
+          <header className="text-center">
+            <h1 className="font-display text-3xl text-ink sm:text-4xl">
+              Contact {siteConfig.name}
+            </h1>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
+              We&apos;re an online store — order via WhatsApp or the form below,
+              and we&apos;ll get back to you shortly. No showroom, no fixed
+              hours — just message us any time.
+            </p>
+          </header>
+        </Reveal>
 
         <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
-          <div className="space-y-8">
-            <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <Reveal className="space-y-8">
+            <div className="rounded-xl border border-ink/10 bg-white p-6 transition duration-300 ease-out hover:shadow-md">
               <h2 className="font-display text-lg text-ink">Get In Touch</h2>
 
               <div className="mt-4 space-y-3 text-sm text-neutral-700">
@@ -42,7 +45,7 @@ export default function ContactPage() {
                     href={siteConfig.whatsapp.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-ink hover:underline"
+                    className="transition-colors duration-300 hover:text-ink hover:underline"
                   >
                     WhatsApp / Phone: {siteConfig.whatsapp.display}
                   </a>
@@ -50,7 +53,7 @@ export default function ContactPage() {
                 <p>
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="hover:text-ink hover:underline"
+                    className="transition-colors duration-300 hover:text-ink hover:underline"
                   >
                     {siteConfig.email}
                   </a>
@@ -61,13 +64,13 @@ export default function ContactPage() {
                 href={siteConfig.whatsapp.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="mt-6 inline-flex items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 Chat on WhatsApp
               </a>
             </div>
 
-            <div className="rounded-xl border border-ink/10 bg-white p-6">
+            <div className="rounded-xl border border-ink/10 bg-white p-6 transition duration-300 ease-out hover:shadow-md">
               <h2 className="font-display text-lg text-ink">
                 Delivery Across Pakistan
               </h2>
@@ -89,11 +92,11 @@ export default function ContactPage() {
                 &amp; nationwide across {siteConfig.country}.
               </p>
             </div>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={0.08}>
             <OrderForm />
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

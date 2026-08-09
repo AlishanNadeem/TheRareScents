@@ -7,7 +7,7 @@ export default function WhatsAppFloatingButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Order on WhatsApp — ${siteConfig.whatsapp.display}`}
-      className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gold text-espresso shadow-lg transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-gold"
+      className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gold text-espresso shadow-lg transition duration-300 ease-out hover:scale-110 hover:bg-[#d4af5a] hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-gold motion-reduce:hover:scale-100"
     >
       <svg
         viewBox="0 0 24 24"

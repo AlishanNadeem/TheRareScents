@@ -41,7 +41,7 @@ export default function SocialStrip({ className = "" }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${siteConfig.name} on ${social.label}`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 text-gold transition hover:bg-gold hover:text-espresso"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 text-gold transition duration-300 ease-out hover:scale-105 hover:bg-gold hover:text-espresso hover:shadow-md"
           >
             <span className="h-4 w-4">{icons[social.key]}</span>
           </a>

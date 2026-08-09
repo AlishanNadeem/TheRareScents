@@ -307,7 +307,7 @@ export default function OrderForm({ product }) {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="w-full rounded-full bg-ink px-6 py-2.5 text-sm font-semibold text-paper transition hover:opacity-90 disabled:opacity-60"
+          className="w-full rounded-full bg-ink px-6 py-2.5 text-sm font-semibold text-paper shadow-sm transition duration-300 ease-out hover:scale-[1.02] hover:bg-neutral-900 hover:shadow-md disabled:opacity-60 motion-reduce:hover:scale-100"
         >
           {status === "submitting"
             ? "Sending..."

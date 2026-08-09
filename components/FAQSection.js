@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { Reveal } from "@/components/Reveal";
 import { FAQS } from "@/lib/faq";
 
 function ChevronIcon({ open }) {
@@ -8,7 +9,7 @@ function ChevronIcon({ open }) {
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      className={`h-5 w-5 shrink-0 text-gold transition-transform duration-300 ${
+      className={`h-5 w-5 shrink-0 text-gold transition-transform duration-300 motion-reduce:transition-none ${
         open ? "rotate-180" : "rotate-0"
       }`}
       aria-hidden="true"
@@ -36,20 +37,25 @@ export default function FAQSection() {
   return (
     <section className="bg-paper" aria-labelledby={`${baseId}-heading`}>
       <div className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
-        <div className="text-center">
-          <h2
-            id={`${baseId}-heading`}
-            className="font-display text-2xl text-ink sm:text-3xl"
-          >
-            Frequently Asked Questions
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
-            Quick answers about delivery, authenticity, and ordering with The
-            Rare Scents.
-          </p>
-        </div>
+        <Reveal>
+          <div className="text-center">
+            <h2
+              id={`${baseId}-heading`}
+              className="font-display text-2xl text-ink sm:text-3xl"
+            >
+              Frequently Asked Questions
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
+              Quick answers about delivery, authenticity, and ordering with The
+              Rare Scents.
+            </p>
+          </div>
+        </Reveal>
 
-        <div className="mt-10 divide-y divide-ink/10 border-y border-ink/10">
+        <Reveal
+          className="mt-10 divide-y divide-ink/10 border-y border-ink/10"
+          delay={0.06}
+        >
           {FAQS.map((item, index) => {
             const open = openIndex === index;
             const panelId = `${baseId}-panel-${index}`;
@@ -79,7 +85,7 @@ export default function FAQSection() {
                   id={panelId}
                   role="region"
                   aria-labelledby={buttonId}
-                  className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                  className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
                     open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                   }`}
                 >
@@ -92,7 +98,7 @@ export default function FAQSection() {
               </div>
             );
           })}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

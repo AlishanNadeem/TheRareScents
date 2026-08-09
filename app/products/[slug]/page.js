@@ -4,6 +4,7 @@ import ProductGallery from "@/components/ProductGallery";
 import NotesPyramid from "@/components/NotesPyramid";
 import OrderForm from "@/components/OrderForm";
 import RelatedProducts from "@/components/RelatedProducts";
+import { Reveal } from "@/components/Reveal";
 import { formatPrice } from "@/lib/formatPrice";
 import { getAllProductSlugs, getProductBySlug } from "@/lib/products";
 import { buildMetadata, productJsonLd } from "@/lib/seo";
@@ -81,11 +82,17 @@ export default async function ProductPage({ params }) {
 
       <div className="mx-auto max-w-5xl px-6 py-12">
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-neutral-500">
-          <Link href="/" className="hover:text-ink">
+          <Link
+            href="/"
+            className="transition-colors duration-300 hover:text-ink"
+          >
             Home
           </Link>
           <span className="px-1.5">/</span>
-          <Link href="/products" className="hover:text-ink">
+          <Link
+            href="/products"
+            className="transition-colors duration-300 hover:text-ink"
+          >
             Shop
           </Link>
           <span className="px-1.5">/</span>
@@ -93,56 +100,63 @@ export default async function ProductPage({ params }) {
         </nav>
 
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-          <ProductGallery images={product.images} productName={product.name} />
+          <Reveal>
+            <ProductGallery
+              images={product.images}
+              productName={product.name}
+            />
+          </Reveal>
 
-          <div>
-            <p className="text-xs uppercase tracking-wide text-gold">
-              {product.category}
-            </p>
-            <h1 className="mt-1 font-display text-3xl text-ink">
-              {product.name}
-            </h1>
-            <p className="mt-2 text-sm italic text-neutral-600">
-              {product.short_description}
-            </p>
+          <Reveal delay={0.08}>
+            <div>
+              <p className="text-xs uppercase tracking-wide text-gold">
+                {product.category}
+              </p>
+              <h1 className="mt-1 font-display text-3xl text-ink">
+                {product.name}
+              </h1>
+              <p className="mt-2 text-sm italic text-neutral-600">
+                {product.short_description}
+              </p>
 
-            <p className="mt-3 text-xl font-semibold text-neutral-900">
-              {formatPrice(product.price, product.currency)}{" "}
-              <span className="text-sm font-normal text-neutral-500">
-                / {product.volume_ml}ml
-              </span>
-            </p>
+              <p className="mt-3 text-xl font-semibold text-neutral-900">
+                {formatPrice(product.price, product.currency)}{" "}
+                <span className="text-sm font-normal text-neutral-500">
+                  / {product.volume_ml}ml
+                </span>
+              </p>
 
-            <p className="mt-4 leading-relaxed text-neutral-700">
-              {product.description}
-            </p>
+              <p className="mt-4 leading-relaxed text-neutral-700">
+                {product.description}
+              </p>
 
-            <p className="mt-4 text-sm font-medium">
-              {product.in_stock ? (
-                <span className="text-gold">In Stock</span>
-              ) : (
-                <span className="text-red-500">Sold Out</span>
-              )}
-            </p>
+              <p className="mt-4 text-sm font-medium">
+                {product.in_stock ? (
+                  <span className="text-gold">In Stock</span>
+                ) : (
+                  <span className="text-red-500">Sold Out</span>
+                )}
+              </p>
 
-            <div className="mt-8 rounded-xl bg-ink/5 p-6">
-              <NotesPyramid notes={product.notes} />
+              <div className="mt-8 rounded-xl bg-ink/5 p-6">
+                <NotesPyramid notes={product.notes} />
+              </div>
+
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-auto"
+              >
+                Order via WhatsApp
+              </a>
             </div>
-
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-auto"
-            >
-              Order via WhatsApp
-            </a>
-          </div>
+          </Reveal>
         </div>
 
-        <div className="mx-auto mt-12 max-w-md">
+        <Reveal className="mx-auto mt-12 max-w-md" delay={0.1}>
           <OrderForm product={product} />
-        </div>
+        </Reveal>
 
         <RelatedProducts currentProduct={product} />
       </div>

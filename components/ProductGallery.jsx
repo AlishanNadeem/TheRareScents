@@ -11,7 +11,7 @@ export default function ProductGallery({ images, productName }) {
 
   return (
     <div>
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
+      <div className="group relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
         {activeImage && (
           <Image
             src={activeImage}
@@ -19,7 +19,7 @@ export default function ProductGallery({ images, productName }) {
             fill
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
+            className="object-cover transition duration-500 ease-out group-hover:scale-105"
           />
         )}
       </div>

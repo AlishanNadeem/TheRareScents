@@ -1,3 +1,6 @@
+"use client";
+
+import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 import { siteConfig } from "@/lib/siteConfig";
 
 const trustItems = [
@@ -63,30 +66,35 @@ export default function TrustStrip() {
   return (
     <section className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-14">
-        <h2 className="text-center font-display text-2xl text-ink sm:text-3xl">
-          Why Shop With Us
-        </h2>
+        <Reveal>
+          <h2 className="text-center font-display text-2xl text-ink sm:text-3xl">
+            Why Shop With Us
+          </h2>
+        </Reveal>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Stagger className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {trustItems.map((item) => (
-            <div
-              key={item.title}
-              className="rounded-xl border border-ink/10 bg-white p-6 text-center shadow-sm"
-            >
-              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
-                <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-                  {item.icon}
-                </svg>
-              </span>
-              <h3 className="mt-4 text-base font-semibold text-neutral-900">
-                {item.title}
-              </h3>
-              <p className="mt-1 text-sm text-neutral-600">
-                {item.description}
-              </p>
-            </div>
+            <StaggerItem key={item.title}>
+              <div className="rounded-xl border border-ink/10 bg-white p-6 text-center shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md">
+                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6"
+                    aria-hidden="true"
+                  >
+                    {item.icon}
+                  </svg>
+                </span>
+                <h3 className="mt-4 text-base font-semibold text-neutral-900">
+                  {item.title}
+                </h3>
+                <p className="mt-1 text-sm text-neutral-600">
+                  {item.description}
+                </p>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

@@ -45,7 +45,7 @@ export default function SiteHeader() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="rounded transition hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="relative rounded text-paper/90 transition-colors duration-300 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 after:ease-out hover:text-gold hover:after:scale-x-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
                 {link.label}
               </Link>
@@ -58,7 +58,7 @@ export default function SiteHeader() {
             href={siteConfig.whatsapp.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden rounded-full bg-gold px-4 py-2 text-sm font-semibold text-espresso transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:inline-block"
+            className="hidden rounded-full bg-gold px-4 py-2 text-sm font-semibold text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:inline-block"
           >
             WhatsApp Us
           </a>
@@ -120,7 +120,7 @@ export default function SiteHeader() {
               href={siteConfig.whatsapp.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-full bg-gold px-4 py-2.5 text-center text-sm font-semibold text-espresso transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="block rounded-full bg-gold px-4 py-2.5 text-center text-sm font-semibold text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.02] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               WhatsApp Us
             </a>

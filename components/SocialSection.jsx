@@ -1,10 +1,13 @@
-import { siteConfig } from "@/lib/siteConfig";
+"use client";
+
+import { Reveal } from "@/components/Reveal";
 import SocialStrip from "@/components/SocialStrip";
+import { siteConfig } from "@/lib/siteConfig";
 
 export default function SocialSection() {
   return (
     <section className="bg-ink">
-      <div className="mx-auto max-w-6xl px-6 py-12 text-center">
+      <Reveal className="mx-auto max-w-6xl px-6 py-12 text-center">
         <h2 className="font-display text-xl text-paper sm:text-2xl">
           Follow {siteConfig.name}
         </h2>
@@ -13,7 +16,7 @@ export default function SocialSection() {
           for the latest drops.
         </p>
         <SocialStrip className="mt-5 justify-center" />
-      </div>
+      </Reveal>
     </section>
   );
 }
