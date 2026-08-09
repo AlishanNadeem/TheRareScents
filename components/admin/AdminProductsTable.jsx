@@ -165,6 +165,12 @@ export default function AdminProductsTable({ products: initialProducts }) {
                   </td>
                   <td className="px-4 py-3 text-neutral-600">
                     Rs {Number(product.price).toLocaleString("en-PK")}
+                    {product.on_sale && product.discount_percent ? (
+                      <span className="mt-0.5 block text-xs font-medium text-gold">
+                        {product.discount_percent}% off
+                        {product.sale_label ? ` · ${product.sale_label}` : ""}
+                      </span>
+                    ) : null}
                   </td>
                   <td className="px-4 py-3">
                     <Toggle

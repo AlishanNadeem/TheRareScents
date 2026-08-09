@@ -6,6 +6,11 @@ import OrderForm from "@/components/OrderForm";
 import RelatedProducts from "@/components/RelatedProducts";
 import { Reveal } from "@/components/Reveal";
 import { formatPrice } from "@/lib/formatPrice";
+import {
+  getEffectivePrice,
+  getSaleBadgeLabel,
+  isSaleActive,
+} from "@/lib/pricing";
 import { getAllProductSlugs, getProductBySlug } from "@/lib/products";
 import { buildMetadata, productJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
@@ -62,8 +67,12 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
+  const saleActive = isSaleActive(product);
+  const effectivePrice = getEffectivePrice(product);
+  const saleBadge = getSaleBadgeLabel(product);
+
   const whatsappMessage = `Hi, I'm interested in ${product.name} - ${formatPrice(
-    product.price,
+    effectivePrice,
     product.currency
   )}`;
   const whatsappHref = `${siteConfig.whatsapp.link}?text=${encodeURIComponent(
@@ -104,6 +113,7 @@ export default async function ProductPage({ params }) {
             <ProductGallery
               images={product.images}
               productName={product.name}
+              saleBadge={saleBadge}
             />
           </Reveal>
 
@@ -120,7 +130,18 @@ export default async function ProductPage({ params }) {
               </p>
 
               <p className="mt-3 text-xl font-semibold text-neutral-900">
-                {formatPrice(product.price, product.currency)}{" "}
+                {saleActive ? (
+                  <>
+                    <span className="mr-2 text-base font-normal text-neutral-400 line-through">
+                      {formatPrice(product.price, product.currency)}
+                    </span>
+                    <span className="text-gold">
+                      {formatPrice(effectivePrice, product.currency)}
+                    </span>
+                  </>
+                ) : (
+                  formatPrice(product.price, product.currency)
+                )}{" "}
                 <span className="text-sm font-normal text-neutral-500">
                   / {product.volume_ml}ml
                 </span>

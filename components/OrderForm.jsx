@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { submitOrder } from "@/lib/orders";
 import { isValidPakistaniPhone } from "@/lib/validation";
 import { formatPrice } from "@/lib/formatPrice";
+import { getEffectivePrice, isSaleActive } from "@/lib/pricing";
 import { siteConfig } from "@/lib/siteConfig";
 
 const initialForm = {
@@ -80,7 +81,7 @@ export default function OrderForm({ product }) {
         product_id: product?._id ?? null,
         product_name: product?.name ?? "General Inquiry",
         product_slug: product?.slug ?? null,
-        product_price: product?.price ?? null,
+        product_price: product ? getEffectivePrice(product) : null,
         name: form.name,
         phone: form.phone,
         city: form.city,
@@ -151,7 +152,18 @@ export default function OrderForm({ product }) {
         <p className="mt-1 text-xs text-neutral-500">
           Ordering:{" "}
           <span className="font-medium text-neutral-700">{product.name}</span> —{" "}
-          {formatPrice(product.price, product.currency)}
+          {isSaleActive(product) ? (
+            <>
+              <span className="mr-1 text-neutral-400 line-through">
+                {formatPrice(product.price, product.currency)}
+              </span>
+              <span className="font-medium text-gold">
+                {formatPrice(getEffectivePrice(product), product.currency)}
+              </span>
+            </>
+          ) : (
+            formatPrice(product.price, product.currency)
+          )}
         </p>
       )}
 

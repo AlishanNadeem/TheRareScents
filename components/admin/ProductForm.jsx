@@ -10,6 +10,14 @@ function notesToString(notes) {
   return Array.isArray(notes) ? notes.join(", ") : "";
 }
 
+function toDatetimeLocalValue(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 function inputClass(hasError) {
   return `mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${
     hasError
@@ -34,6 +42,14 @@ export default function ProductForm({ product = null }) {
   const [volumeMl, setVolumeMl] = useState(product?.volume_ml ?? 50);
   const [inStock, setInStock] = useState(product?.in_stock ?? true);
   const [featured, setFeatured] = useState(product?.featured ?? false);
+  const [onSale, setOnSale] = useState(product?.on_sale ?? false);
+  const [discountPercent, setDiscountPercent] = useState(
+    product?.discount_percent ?? ""
+  );
+  const [saleLabel, setSaleLabel] = useState(product?.sale_label ?? "");
+  const [saleEndsAt, setSaleEndsAt] = useState(
+    toDatetimeLocalValue(product?.sale_ends_at)
+  );
   const [notesTop, setNotesTop] = useState(notesToString(product?.notes?.top));
   const [notesMiddle, setNotesMiddle] = useState(
     notesToString(product?.notes?.middle)
@@ -89,6 +105,10 @@ export default function ProductForm({ product = null }) {
     formData.set("volume_ml", String(volumeMl));
     formData.set("in_stock", String(inStock));
     formData.set("featured", String(featured));
+    formData.set("on_sale", String(onSale));
+    formData.set("discount_percent", String(discountPercent));
+    formData.set("sale_label", saleLabel);
+    formData.set("sale_ends_at", saleEndsAt);
     formData.set("notes_top", notesTop);
     formData.set("notes_middle", notesMiddle);
     formData.set("notes_base", notesBase);
@@ -347,7 +367,82 @@ export default function ProductForm({ product = null }) {
           />
           Featured
         </label>
+        <label className="inline-flex items-center gap-2 text-sm text-neutral-800">
+          <input
+            type="checkbox"
+            checked={onSale}
+            onChange={(event) => setOnSale(event.target.checked)}
+            className="h-4 w-4 rounded border-neutral-300 text-gold focus:ring-gold"
+          />
+          On Sale
+        </label>
       </div>
+
+      {onSale && (
+        <div className="grid grid-cols-1 gap-4 rounded-xl border border-gold/30 bg-gold/5 p-4 sm:grid-cols-3">
+          <div>
+            <label
+              htmlFor="discount_percent"
+              className="text-sm font-medium text-neutral-800"
+            >
+              Discount %
+            </label>
+            <input
+              id="discount_percent"
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              value={discountPercent}
+              onChange={(event) => setDiscountPercent(event.target.value)}
+              className={inputClass(Boolean(errors.discount_percent))}
+              required={onSale}
+            />
+            {errors.discount_percent && (
+              <p className="mt-1 text-xs text-red-600">
+                {errors.discount_percent}
+              </p>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="sale_label"
+              className="text-sm font-medium text-neutral-800"
+            >
+              Sale Label
+            </label>
+            <input
+              id="sale_label"
+              type="text"
+              value={saleLabel}
+              onChange={(event) => setSaleLabel(event.target.value)}
+              placeholder="e.g. Azaadi Sale"
+              className={inputClass(false)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="sale_ends_at"
+              className="text-sm font-medium text-neutral-800"
+            >
+              Sale Ends At
+            </label>
+            <input
+              id="sale_ends_at"
+              type="datetime-local"
+              value={saleEndsAt}
+              onChange={(event) => setSaleEndsAt(event.target.value)}
+              className={inputClass(Boolean(errors.sale_ends_at))}
+            />
+            {errors.sale_ends_at && (
+              <p className="mt-1 text-xs text-red-600">{errors.sale_ends_at}</p>
+            )}
+            <p className="mt-1 text-xs text-neutral-500">
+              Optional — sale hides automatically after this time.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div>
         <label

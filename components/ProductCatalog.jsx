@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
 import { Reveal } from "@/components/Reveal";
+import { getEffectivePrice, isSaleActive } from "@/lib/pricing";
 import { siteConfig } from "@/lib/siteConfig";
 
 const SORT_OPTIONS = [
@@ -26,24 +27,34 @@ export default function ProductCatalog({ products }) {
     const slug = searchParams.get("category");
     return siteConfig.categories.find((c) => c.slug === slug)?.value ?? "all";
   }, [searchParams]);
+  const initialOnSale = searchParams.get("sale") === "1";
 
   const [category, setCategory] = useState(initialCategory);
+  const [onSaleOnly, setOnSaleOnly] = useState(initialOnSale);
   const [sort, setSort] = useState("default");
 
   const visibleProducts = useMemo(() => {
-    const filtered =
+    let filtered =
       category === "all"
         ? products
         : products.filter((product) => product.category === category);
 
+    if (onSaleOnly) {
+      filtered = filtered.filter((product) => isSaleActive(product));
+    }
+
     if (sort === "price-asc") {
-      return [...filtered].sort((a, b) => a.price - b.price);
+      return [...filtered].sort(
+        (a, b) => getEffectivePrice(a) - getEffectivePrice(b)
+      );
     }
     if (sort === "price-desc") {
-      return [...filtered].sort((a, b) => b.price - a.price);
+      return [...filtered].sort(
+        (a, b) => getEffectivePrice(b) - getEffectivePrice(a)
+      );
     }
     return filtered;
-  }, [products, category, sort]);
+  }, [products, category, onSaleOnly, sort]);
 
   const activeCategory = siteConfig.categories.find(
     (c) => c.value === category
@@ -54,12 +65,18 @@ export default function ProductCatalog({ products }) {
       <Reveal>
         <header className="text-center">
           <h1 className="font-display text-3xl text-ink sm:text-4xl">
-            {activeCategory ? activeCategory.label : "Shop All Fragrances"}
+            {onSaleOnly && !activeCategory
+              ? "On Sale"
+              : activeCategory
+                ? activeCategory.label
+                : "Shop All Fragrances"}
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
-            {activeCategory
-              ? activeCategory.description
-              : `Original perfumes, oud & attars — curated and delivered across ${siteConfig.country}.`}
+            {onSaleOnly && !activeCategory
+              ? "Limited-time discounts across the collection."
+              : activeCategory
+                ? activeCategory.description
+                : `Original perfumes, oud & attars — curated and delivered across ${siteConfig.country}.`}
           </p>
         </header>
       </Reveal>
@@ -86,6 +103,18 @@ export default function ProductCatalog({ products }) {
               {c.label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => setOnSaleOnly((value) => !value)}
+            aria-pressed={onSaleOnly}
+            className={
+              onSaleOnly
+                ? "rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-espresso shadow-sm transition duration-300 ease-out"
+                : "rounded-full border border-gold/50 px-4 py-1.5 text-sm text-gold transition duration-300 ease-out hover:bg-gold/10"
+            }
+          >
+            On Sale
+          </button>
         </nav>
 
         <label className="flex items-center gap-2 text-sm text-neutral-700">

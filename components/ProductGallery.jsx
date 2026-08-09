@@ -4,7 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { siteConfig } from "@/lib/siteConfig";
 
-export default function ProductGallery({ images, productName }) {
+export default function ProductGallery({
+  images,
+  productName,
+  saleBadge = null,
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const gallery = images?.length ? images : [];
   const activeImage = gallery[activeIndex] ?? gallery[0];
@@ -21,6 +25,11 @@ export default function ProductGallery({ images, productName }) {
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition duration-500 ease-out group-hover:scale-105"
           />
+        )}
+        {saleBadge && (
+          <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-gold px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-espresso shadow-sm">
+            {saleBadge}
+          </span>
         )}
       </div>
 

@@ -39,6 +39,12 @@ const productSchema = new Schema(
     volume_ml: { type: Number, required: true, min: 0 },
     in_stock: { type: Boolean, default: true },
     featured: { type: Boolean, default: false },
+    // Optional sale fields — products with on_sale false/unset display as usual.
+    on_sale: { type: Boolean, default: false },
+    discount_percent: { type: Number, min: 0, max: 100, default: null },
+    sale_label: { type: String, trim: true, default: "" },
+    // When set, sale display stops after this moment even if on_sale is still true.
+    sale_ends_at: { type: Date, default: null },
   },
   {
     // created_at / updated_at (snake_case) instead of Mongoose's default
