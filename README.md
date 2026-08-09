@@ -1,36 +1,172 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# The Rare Scents
 
-## Getting Started
+Online perfume storefront for **The Rare Scents** (Pakistan) — Next.js 14 App Router, plain JavaScript, Tailwind CSS, MongoDB Atlas, and a password-protected admin panel.
 
-First, run the development server:
+## Stack
+
+- **Next.js 14** (App Router, JavaScript only — no TypeScript)
+- **Tailwind CSS** (black / white / gold brand theme)
+- **MongoDB Atlas** + **Mongoose**
+- **NextAuth.js** (Credentials provider for admin)
+- **recharts** (admin dashboard charts)
+
+## Prerequisites
+
+- Node.js 18+
+- A free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cluster
+- npm
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+cd rare-scents
+npm install
+```
+
+### 2. Configure environment variables
+
+Copy the example env file and fill in real values:
+
+```bash
+cp .env.example .env.local
+```
+
+Required variables:
+
+| Variable          | Purpose                                      |
+| ----------------- | -------------------------------------------- |
+| `MONGODB_URI`     | MongoDB Atlas connection string              |
+| `NEXTAUTH_SECRET` | Random secret for signing admin session JWTs |
+| `NEXTAUTH_URL`    | App URL (`http://localhost:3000` in dev)     |
+
+Optional:
+
+| Variable                        | Purpose                                             |
+| ------------------------------- | --------------------------------------------------- |
+| `GOOGLE_SITE_VERIFICATION`      | Google Search Console HTML-tag verification content |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 ID (`G-XXXXXXXXXX`)              |
+
+Generate a NextAuth secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+`.env.local` is gitignored — never commit real secrets.
+
+### 3. MongoDB Atlas connection
+
+1. Create a free **M0** cluster in Atlas.
+2. Under **Database Access**, create a database user with a strong password.
+3. Under **Network Access**, allow your current IP (or `0.0.0.0/0` for local/dev only).
+4. Click **Database → Connect → Drivers**, copy the connection string, and set it as `MONGODB_URI` in `.env.local`.
+
+Example shape:
+
+```text
+mongodb+srv://<user>:<password>@<cluster>.mongodb.net/rare-scents?retryWrites=true&w=majority
+```
+
+Replace `<password>` (URL-encode special characters) and prefer a database name such as `rare-scents`.
+
+### 4. Seed products
+
+Loads the mock catalog from `data/products.js` into MongoDB (clears existing products first):
+
+```bash
+npm run seed
+```
+
+### 5. Create an admin user
+
+Interactive:
+
+```bash
+npm run create-admin
+```
+
+Or non-interactive:
+
+```bash
+npm run create-admin -- --email you@example.com --password 'your-password'
+```
+
+Password is hashed with bcrypt before insert. Re-running with the same email updates the password.
+
+### 6. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Storefront: [http://localhost:3000](http://localhost:3000)
+- Admin login: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/                 # App Router pages + API routes
+  admin/             # Password-protected admin panel
+  api/               # /api/orders, /api/admin/*, /api/auth/*
+  products/          # Catalog + product detail
+components/          # UI components (store + admin)
+data/products.js     # Seed source (not used at runtime by pages)
+lib/                 # DB helpers, SEO, auth, formatting
+models/              # Mongoose models (Product, Order, AdminUser)
+public/              # Static assets; uploads go in public/uploads (dev only)
+scripts/             # seed.js, create-admin.js
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Admin panel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+After signing in at `/admin/login`:
 
-## Deploy on Vercel
+- **Dashboard** — product/order stats, status breakdown, top sellers, 30-day chart
+- **Products** — create / edit / delete, stock & featured toggles, image upload
+- **Orders** — filter, sort, paginate, update status, Call / WhatsApp shortcuts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Admin routes are protected by `middleware.js` + NextAuth. `/admin` and `/api/` are disallowed in `robots.txt`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Image uploads
+
+Admin product images are saved under `public/uploads` for local development.
+
+> Before production, move uploads to a cloud service such as **Cloudinary** or **S3**. Files in `/public/uploads` do not persist on most serverless hosts across deploys.
+
+## Useful scripts
+
+| Command                | Description                   |
+| ---------------------- | ----------------------------- |
+| `npm run dev`          | Start local dev server        |
+| `npm run build`        | Production build              |
+| `npm start`            | Serve production build        |
+| `npm run lint`         | ESLint                        |
+| `npm run seed`         | Seed products into MongoDB    |
+| `npm run create-admin` | Create / update an admin user |
+
+## SEO
+
+- Unique title + meta description per public page (Pakistan-targeted)
+- `og:locale = en_PK`, `hreflang` / `en-PK`, geo meta tags
+- Dynamic `sitemap.xml` (includes product slugs from MongoDB)
+- `robots.txt` pointing at the sitemap
+- Organization + Product JSON-LD
+
+## Brand theme
+
+Tailwind tokens in `tailwind.config.js`:
+
+- `ink` `#0A0A0A`
+- `paper` `#F5F5F0`
+- `gold` `#C9A24B`
+- `gray` `#8C8C8C`
+- `espresso` `#3D2E0A` (text on gold)
