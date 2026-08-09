@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
 import SocialStrip from "@/components/SocialStrip";
@@ -10,10 +11,16 @@ export default function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h2 className="font-display text-xl text-gold">
-              {siteConfig.name}
+            <h2 className="m-0">
+              <Image
+                src="/logo.png"
+                alt={siteConfig.name}
+                width={160}
+                height={160}
+                className="h-auto w-[140px] sm:w-[160px]"
+              />
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-paper/80">
+            <p className="mt-4 text-sm leading-relaxed text-paper/80">
               Rare oils. Exclusive blends. Curated perfumes delivered across
               Pakistan.
             </p>

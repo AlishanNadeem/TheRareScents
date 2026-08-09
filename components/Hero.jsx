@@ -32,11 +32,11 @@ export default function Hero() {
         <motion.div variants={reduceMotion ? undefined : heroItemVariants}>
           <Image
             src="/logo.png"
-            alt={`${siteConfig.name} — RS monogram logo, original perfumes in Pakistan`}
-            width={128}
-            height={128}
+            alt={siteConfig.name}
+            width={160}
+            height={160}
             priority
-            className="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
+            className="h-auto w-28 sm:w-32"
           />
         </motion.div>
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
 import LogoutButton from "@/components/admin/LogoutButton";
@@ -12,8 +13,16 @@ export default function AdminSidebar({ email }) {
   return (
     <aside className="flex w-64 shrink-0 flex-col justify-between border-r border-ink/10 bg-ink px-4 py-6 text-paper">
       <div>
-        <p className="px-2 font-display text-lg text-gold">{siteConfig.name}</p>
-        <p className="px-2 text-xs text-paper/60">Admin Panel</p>
+        <div className="px-2">
+          <Image
+            src="/logo.png"
+            alt={siteConfig.name}
+            width={140}
+            height={140}
+            className="h-auto w-[120px]"
+          />
+          <p className="mt-2 text-xs text-paper/60">Admin Panel</p>
+        </div>
 
         <nav aria-label="Admin" className="mt-8 space-y-1">
           {navLinks.map((link) => (
