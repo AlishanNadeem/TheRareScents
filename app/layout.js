@@ -62,10 +62,7 @@ export const metadata = {
     index: true,
     follow: true,
   },
-  icons: {
-    icon: "/icon.png",
-    apple: "/apple-icon.png",
-  },
+  manifest: "/site.webmanifest",
   // Google Search Console — set GOOGLE_SITE_VERIFICATION in .env.local
   // (the content value from the HTML-tag verification method). Omitted when empty.
   verification: process.env.GOOGLE_SITE_VERIFICATION
