@@ -1,13 +1,17 @@
 "use client";
 
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 /**
  * Loads Google Analytics (gtag.js) when NEXT_PUBLIC_GA_MEASUREMENT_ID is set.
  * Leave the env var empty in local/.env.example until you have a real GA4 ID.
  */
 export default function GoogleAnalytics({ measurementId }) {
+  const pathname = usePathname();
+
   if (!measurementId) return null;
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
