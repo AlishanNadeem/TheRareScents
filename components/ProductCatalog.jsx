@@ -112,16 +112,6 @@ export default function ProductCatalog({ products }) {
       );
     }
 
-    // Temporary diagnostics — remove once the empty-filter bug is confirmed fixed.
-    console.log("[ProductCatalog] filter", {
-      category,
-      onSaleOnly,
-      sort,
-      sourceCount: source.length,
-      resultCount: filtered.length,
-      sampleCategories: [...new Set(source.map((p) => p.category))],
-    });
-
     return filtered;
   }, [products, category, onSaleOnly, sort]);
 
