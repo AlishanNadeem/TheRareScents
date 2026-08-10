@@ -41,20 +41,37 @@ export function Reveal({ children, className, delay = 0 }) {
 
 /**
  * Parent for staggered grid/list entrances. Pair with StaggerItem children.
+ *
+ * trigger="view" — animate when scrolled into view (homepage sections).
+ * trigger="mount" — animate immediately on mount (filterable grids). Use
+ * mount for lists that remount while already on-screen; whileInView can
+ * miss the IntersectionObserver callback and leave children at opacity 0.
  */
-export function Stagger({ children, className, stagger = 0.08 }) {
+export function Stagger({
+  children,
+  className,
+  stagger = 0.08,
+  trigger = "view",
+}) {
   const reduceMotion = useReducedMotion();
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  const visibilityProps =
+    trigger === "mount"
+      ? { animate: "visible" }
+      : {
+          whileInView: "visible",
+          viewport: { once: true, amount: 0.12, margin: "0px 0px -32px 0px" },
+        };
+
   return (
     <motion.div
       className={className}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.12, margin: "0px 0px -32px 0px" }}
+      {...visibilityProps}
       variants={{
         hidden: {},
         visible: {

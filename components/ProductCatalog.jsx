@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
 import { Reveal } from "@/components/Reveal";
 import { getEffectivePrice, isSaleActive } from "@/lib/pricing";
@@ -21,44 +21,122 @@ function pillClasses(active) {
   }`;
 }
 
-export default function ProductCatalog({ products }) {
-  const searchParams = useSearchParams();
-  const initialCategory = useMemo(() => {
-    const slug = searchParams.get("category");
-    return siteConfig.categories.find((c) => c.slug === slug)?.value ?? "all";
-  }, [searchParams]);
-  const initialOnSale = searchParams.get("sale") === "1";
+function categoryFromSearchParams(searchParams) {
+  const slug = searchParams.get("category");
+  if (!slug) return "all";
+  return siteConfig.categories.find((c) => c.slug === slug)?.value ?? "all";
+}
 
-  const [category, setCategory] = useState(initialCategory);
-  const [onSaleOnly, setOnSaleOnly] = useState(initialOnSale);
+function saleFromSearchParams(searchParams) {
+  const sale = searchParams.get("sale");
+  return sale === "1" || sale === "true";
+}
+
+function matchesCategory(product, categoryValue) {
+  return (
+    String(product?.category ?? "").trim() === String(categoryValue).trim()
+  );
+}
+
+export default function ProductCatalog({ products }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [category, setCategory] = useState(() =>
+    categoryFromSearchParams(searchParams)
+  );
+  const [onSaleOnly, setOnSaleOnly] = useState(() =>
+    saleFromSearchParams(searchParams)
+  );
   const [sort, setSort] = useState("default");
 
+  // Keep local filters in sync when the URL changes (header/footer/sale links).
+  useEffect(() => {
+    const nextCategory = categoryFromSearchParams(searchParams);
+    const nextSale = saleFromSearchParams(searchParams);
+    setCategory(nextCategory);
+    setOnSaleOnly(nextSale);
+  }, [searchParams]);
+
+  function updateUrl({ nextCategory = category, nextSale = onSaleOnly }) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (nextCategory === "all") {
+      params.delete("category");
+    } else {
+      const slug = siteConfig.categories.find(
+        (c) => c.value === nextCategory
+      )?.slug;
+      if (slug) params.set("category", slug);
+      else params.delete("category");
+    }
+
+    if (nextSale) params.set("sale", "1");
+    else params.delete("sale");
+
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }
+
+  function selectCategory(nextCategory) {
+    setCategory(nextCategory);
+    updateUrl({ nextCategory });
+  }
+
+  function toggleOnSale() {
+    const nextSale = !onSaleOnly;
+    setOnSaleOnly(nextSale);
+    updateUrl({ nextSale });
+  }
+
   const visibleProducts = useMemo(() => {
+    const source = Array.isArray(products) ? products : [];
+
     let filtered =
       category === "all"
-        ? products
-        : products.filter((product) => product.category === category);
+        ? source
+        : source.filter((product) => matchesCategory(product, category));
 
     if (onSaleOnly) {
       filtered = filtered.filter((product) => isSaleActive(product));
     }
 
     if (sort === "price-asc") {
-      return [...filtered].sort(
+      filtered = [...filtered].sort(
         (a, b) => getEffectivePrice(a) - getEffectivePrice(b)
       );
-    }
-    if (sort === "price-desc") {
-      return [...filtered].sort(
+    } else if (sort === "price-desc") {
+      filtered = [...filtered].sort(
         (a, b) => getEffectivePrice(b) - getEffectivePrice(a)
       );
     }
+
+    // Temporary diagnostics — remove once the empty-filter bug is confirmed fixed.
+    console.log("[ProductCatalog] filter", {
+      category,
+      onSaleOnly,
+      sort,
+      sourceCount: source.length,
+      resultCount: filtered.length,
+      sampleCategories: [...new Set(source.map((p) => p.category))],
+    });
+
     return filtered;
   }, [products, category, onSaleOnly, sort]);
 
   const activeCategory = siteConfig.categories.find(
     (c) => c.value === category
   );
+
+  const emptyMessage =
+    onSaleOnly && category !== "all"
+      ? "No sale items in this category right now."
+      : onSaleOnly
+        ? "No products are on sale right now."
+        : category !== "all"
+          ? "No products found in this category."
+          : "No products found.";
 
   return (
     <div>
@@ -88,7 +166,7 @@ export default function ProductCatalog({ products }) {
         >
           <button
             type="button"
-            onClick={() => setCategory("all")}
+            onClick={() => selectCategory("all")}
             className={pillClasses(category === "all")}
           >
             All
@@ -97,7 +175,7 @@ export default function ProductCatalog({ products }) {
             <button
               key={c.slug}
               type="button"
-              onClick={() => setCategory(c.value)}
+              onClick={() => selectCategory(c.value)}
               className={pillClasses(category === c.value)}
             >
               {c.label}
@@ -105,7 +183,7 @@ export default function ProductCatalog({ products }) {
           ))}
           <button
             type="button"
-            onClick={() => setOnSaleOnly((value) => !value)}
+            onClick={toggleOnSale}
             aria-pressed={onSaleOnly}
             className={
               onSaleOnly
@@ -139,7 +217,11 @@ export default function ProductCatalog({ products }) {
       </p>
 
       <div className="mt-6">
-        <ProductGrid products={visibleProducts} />
+        {visibleProducts.length ? (
+          <ProductGrid products={visibleProducts} animateOnMount />
+        ) : (
+          <p className="py-12 text-center text-neutral-500">{emptyMessage}</p>
+        )}
       </div>
     </div>
   );

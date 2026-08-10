@@ -23,10 +23,31 @@ export default async function ProductsPage() {
   return (
     <section className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-14 sm:py-16">
-        <Suspense fallback={null}>
+        <Suspense fallback={<ProductsCatalogFallback />}>
           <ProductCatalog products={products} />
         </Suspense>
       </div>
     </section>
+  );
+}
+
+function ProductsCatalogFallback() {
+  return (
+    <div
+      className="animate-pulse"
+      role="status"
+      aria-label="Loading product filters"
+    >
+      <div className="flex flex-col items-center text-center">
+        <div className="h-8 w-64 rounded-full bg-ink/10 sm:h-10 sm:w-80" />
+        <div className="mt-4 h-4 w-72 rounded-full bg-ink/10 sm:w-96" />
+      </div>
+      <div className="mt-8 flex flex-wrap justify-center gap-2">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div key={index} className="h-8 w-20 rounded-full bg-ink/10" />
+        ))}
+      </div>
+      <p className="mt-6 text-center text-sm text-neutral-500">Loading…</p>
+    </div>
   );
 }
