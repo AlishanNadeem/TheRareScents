@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
 import SocialStrip from "@/components/SocialStrip";
+import { CookieSettingsLink } from "@/components/CookieConsent";
 
 export default function SiteFooter() {
   const year = new Date().getFullYear();
@@ -17,7 +18,7 @@ export default function SiteFooter() {
                 alt={siteConfig.name}
                 width={160}
                 height={160}
-                className="h-auto w-[140px] sm:w-[160px]"
+                className="h-auto w-[110px] sm:w-[140px] md:w-[160px]"
               />
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-paper/80">
@@ -115,6 +116,9 @@ export default function SiteFooter() {
           <p>
             &copy; {year} {siteConfig.name}. All rights reserved. Original
             perfumes, oud &amp; attars — proudly Pakistani.
+          </p>
+          <p className="mt-2">
+            <CookieSettingsLink className="text-paper/60" />
           </p>
         </div>
       </div>

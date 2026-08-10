@@ -21,18 +21,18 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-gold/20 bg-ink">
       <nav
         aria-label="Primary"
-        className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
+        className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4"
       >
         <Link
           href="/"
-          className="flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          className="min-w-0 flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           <Image
             src="/logo-vertical.png"
             alt={siteConfig.name}
             width={200}
             height={68}
-            className="h-12 w-auto sm:h-14"
+            className="h-9 w-auto max-w-[min(200px,58vw)] object-contain object-left sm:h-12 md:h-14"
             priority
           />
         </Link>

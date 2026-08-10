@@ -199,7 +199,7 @@ export default function Testimonials() {
                 {TESTIMONIALS.map((item) => (
                   <li
                     key={`${item.name}-${item.city}`}
-                    className="box-border shrink-0 px-3"
+                    className="box-border shrink-0 px-1 sm:px-3"
                     style={{ width: `${100 / count}%` }}
                   >
                     <TestimonialCard item={item} />

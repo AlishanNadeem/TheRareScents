@@ -14,7 +14,7 @@ export default function ProductCard({ product, priority = false }) {
   const effectivePrice = getEffectivePrice(product);
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition duration-300 ease-out hover:scale-105 hover:shadow-lg motion-reduce:hover:scale-100">
+    <article className="group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition duration-300 ease-out hover:shadow-lg sm:hover:scale-105 motion-reduce:sm:hover:scale-100">
       <Link
         href={`/products/${product.slug}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"

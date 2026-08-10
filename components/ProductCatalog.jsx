@@ -159,15 +159,15 @@ export default function ProductCatalog({ products }) {
         </header>
       </Reveal>
 
-      <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div className="mt-6 flex flex-col gap-4 sm:mt-8 sm:flex-row sm:items-center sm:justify-between">
         <nav
           aria-label="Filter by category"
-          className="flex flex-wrap items-center justify-center gap-2"
+          className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0"
         >
           <button
             type="button"
             onClick={() => selectCategory("all")}
-            className={pillClasses(category === "all")}
+            className={`shrink-0 ${pillClasses(category === "all")}`}
           >
             All
           </button>
@@ -176,7 +176,7 @@ export default function ProductCatalog({ products }) {
               key={c.slug}
               type="button"
               onClick={() => selectCategory(c.value)}
-              className={pillClasses(category === c.value)}
+              className={`shrink-0 ${pillClasses(category === c.value)}`}
             >
               {c.label}
             </button>
@@ -187,15 +187,15 @@ export default function ProductCatalog({ products }) {
             aria-pressed={onSaleOnly}
             className={
               onSaleOnly
-                ? "rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-espresso shadow-sm transition duration-300 ease-out"
-                : "rounded-full border border-gold/50 px-4 py-1.5 text-sm text-gold transition duration-300 ease-out hover:bg-gold/10"
+                ? "shrink-0 rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-espresso shadow-sm transition duration-300 ease-out"
+                : "shrink-0 rounded-full border border-gold/50 px-4 py-1.5 text-sm text-gold transition duration-300 ease-out hover:bg-gold/10"
             }
           >
             On Sale
           </button>
         </nav>
 
-        <label className="flex items-center gap-2 text-sm text-neutral-700">
+        <label className="flex items-center justify-center gap-2 text-sm text-neutral-700 sm:justify-start">
           Sort by
           <select
             value={sort}
