@@ -19,7 +19,12 @@ const orderSchema = new Schema(
   {
     customer_name: { type: String, required: true, trim: true },
     phone: { type: String, required: true, trim: true },
+    // Legacy field — kept so older orders still load. New submissions use
+    // `address` only; `city` is no longer collected on the storefront.
     city: { type: String, default: "", trim: true },
+    // Required by /api/orders for new submissions. Not schema-required so
+    // legacy orders without this field still load and update cleanly.
+    address: { type: String, default: "", trim: true },
     quantity: { type: Number, default: 1, min: 1 },
     message: { type: String, default: "" },
     items: { type: [orderItemSchema], default: [] },

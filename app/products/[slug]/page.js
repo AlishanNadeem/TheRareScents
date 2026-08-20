@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductGallery from "@/components/ProductGallery";
 import NotesPyramid, { hasFragranceNotes } from "@/components/NotesPyramid";
 import OrderForm from "@/components/OrderForm";
@@ -12,8 +13,8 @@ import {
   isSaleActive,
 } from "@/lib/pricing";
 import { getAllProductSlugs, getProductBySlug } from "@/lib/products";
-import { buildMetadata, productJsonLd } from "@/lib/seo";
-import { siteConfig } from "@/lib/siteConfig";
+import { breadcrumbJsonLd, buildMetadata, productJsonLd } from "@/lib/seo";
+import { getCategoryConfig, siteConfig } from "@/lib/siteConfig";
 
 // Revalidate periodically so new/updated products in MongoDB Atlas show up
 // without needing a full redeploy.
@@ -70,6 +71,15 @@ export default async function ProductPage({ params }) {
   const saleActive = isSaleActive(product);
   const effectivePrice = getEffectivePrice(product);
   const saleBadge = getSaleBadgeLabel(product);
+  const categoryConfig = getCategoryConfig(product.category);
+
+  const breadcrumbItems = [
+    { label: "Home", path: "/" },
+    categoryConfig
+      ? { label: categoryConfig.label, path: categoryConfig.href }
+      : { label: "Shop", path: "/products" },
+    { label: product.name, path: `/products/${product.slug}` },
+  ];
 
   const whatsappMessage = `Hi, I'm interested in ${product.name} - ${formatPrice(
     effectivePrice,
@@ -88,25 +98,25 @@ export default async function ProductPage({ params }) {
           __html: JSON.stringify(productJsonLd(product)),
         }}
       />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbJsonLd(
+              breadcrumbItems.map((item) => ({
+                name: item.label,
+                path: item.path,
+              }))
+            )
+          ),
+        }}
+      />
 
       <div className="mx-auto max-w-5xl px-6 py-12">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-neutral-500">
-          <Link
-            href="/"
-            className="transition-colors duration-300 hover:text-ink"
-          >
-            Home
-          </Link>
-          <span className="px-1.5">/</span>
-          <Link
-            href="/products"
-            className="transition-colors duration-300 hover:text-ink"
-          >
-            Shop
-          </Link>
-          <span className="px-1.5">/</span>
-          <span className="text-neutral-700">{product.name}</span>
-        </nav>
+        <div className="mb-6">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
 
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
           <Reveal>
@@ -119,9 +129,18 @@ export default async function ProductPage({ params }) {
 
           <Reveal delay={0.08}>
             <div>
-              <p className="text-xs uppercase tracking-wide text-gold">
-                {product.category}
-              </p>
+              {categoryConfig ? (
+                <Link
+                  href={categoryConfig.href}
+                  className="text-xs uppercase tracking-wide text-gold transition-colors duration-300 hover:text-ink"
+                >
+                  {product.category}
+                </Link>
+              ) : (
+                <p className="text-xs uppercase tracking-wide text-gold">
+                  {product.category}
+                </p>
+              )}
               <h1 className="mt-1 font-display text-3xl text-ink">
                 {product.name}
               </h1>

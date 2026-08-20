@@ -4,6 +4,7 @@ import FAQSection from "@/components/FAQSection";
 import ProductGrid from "@/components/ProductGrid";
 import { Reveal } from "@/components/Reveal";
 import { categoryHref } from "@/lib/categoryPages";
+import { siteConfig } from "@/lib/siteConfig";
 
 /**
  * Category landing layout — header + grid styled to match /products,
@@ -84,16 +85,13 @@ export default function CategoryLanding({ page, products }) {
                     </Link>
                   </span>
                 ))}
-              </p>
-              <p className="mt-3 text-sm text-neutral-500">
-                Or browse{" "}
+                {" · "}
                 <Link
                   href="/products"
-                  className="underline decoration-ink/20 underline-offset-2 transition hover:text-ink"
+                  className="font-medium text-gold transition-colors duration-300 hover:text-ink"
                 >
-                  all products
+                  All Products
                 </Link>
-                .
               </p>
             </Reveal>
           ) : null}
@@ -102,7 +100,7 @@ export default function CategoryLanding({ page, products }) {
 
       <FAQSection
         faqs={page.faqs}
-        description={`Questions about ${page.label} fragrances and ordering from The Rare Scents.`}
+        description={`Questions about ${page.label} fragrances and ordering from ${siteConfig.name}.`}
       />
     </>
   );

@@ -1,11 +1,23 @@
 import { telHref, whatsappHref } from "@/lib/phoneLinks";
 
-export default function PhoneActions({ phone, customerName = "" }) {
+export default function PhoneActions({
+  phone,
+  customerName = "",
+  address = "",
+}) {
   if (!phone) return <span className="text-neutral-400">—</span>;
 
-  const message = customerName
+  let message = customerName
     ? `Hi ${customerName}, this is The Rare Scents regarding your order.`
     : "Hi, this is The Rare Scents regarding your order.";
+
+  // Keep WhatsApp short — full multi-line address stays in the admin panel.
+  if (address?.trim()) {
+    const oneLine = address.trim().replace(/\s+/g, " ");
+    const snippet =
+      oneLine.length > 80 ? `${oneLine.slice(0, 77)}…` : oneLine;
+    message = `${message} Delivery: ${snippet}`;
+  }
 
   return (
     <div className="flex flex-col gap-1">

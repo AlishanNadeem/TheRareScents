@@ -66,12 +66,15 @@ export default async function AdminOrderDetailPage({ params }) {
                 <PhoneActions
                   phone={order.phone}
                   customerName={order.customer_name}
+                  address={order.address}
                 />
               </dd>
             </div>
             <div>
-              <dt className="text-neutral-500">City</dt>
-              <dd className="mt-1 text-ink">{order.city || "—"}</dd>
+              <dt className="text-neutral-500">Shipping Address</dt>
+              <dd className="mt-1 whitespace-pre-wrap text-ink">
+                {order.address || "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-neutral-500">Quantity requested</dt>

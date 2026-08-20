@@ -41,7 +41,7 @@ export default function HomePage() {
       <CategoryHighlights />
       <TrustStrip />
       <Testimonials />
-      <FAQSection />
+      <FAQSection sectionId="faq" />
       <SocialSection />
     </>
   );

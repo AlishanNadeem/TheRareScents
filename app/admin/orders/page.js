@@ -117,7 +117,7 @@ export default async function AdminOrdersPage({ searchParams }) {
             <tr className="border-b border-ink/10 text-neutral-500">
               <th className="px-4 py-3">Customer</th>
               <th className="px-4 py-3">Phone</th>
-              <th className="px-4 py-3">City</th>
+              <th className="px-4 py-3">Address</th>
               <th className="px-4 py-3">Items</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Date</th>
@@ -144,10 +144,13 @@ export default async function AdminOrdersPage({ searchParams }) {
                   <PhoneActions
                     phone={order.phone}
                     customerName={order.customer_name}
+                    address={order.address}
                   />
                 </td>
-                <td className="px-4 py-3 text-neutral-600">
-                  {order.city || "—"}
+                <td className="max-w-[14rem] px-4 py-3 text-neutral-600">
+                  <span className="line-clamp-2 whitespace-pre-line">
+                    {order.address || "—"}
+                  </span>
                 </td>
                 <td className="px-4 py-3 text-neutral-600">
                   {itemsSummary(order)}

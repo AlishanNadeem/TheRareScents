@@ -29,6 +29,7 @@ export default function FAQSection({
   faqs = FAQS,
   heading = "Frequently Asked Questions",
   description = "Quick answers about delivery, authenticity, and ordering with The Rare Scents.",
+  sectionId,
 }) {
   const baseId = useId();
   // One open at a time — cleaner on mobile and easier to scan.
@@ -39,7 +40,11 @@ export default function FAQSection({
   }
 
   return (
-    <section className="bg-paper" aria-labelledby={`${baseId}-heading`}>
+    <section
+      id={sectionId}
+      className="bg-paper"
+      aria-labelledby={`${baseId}-heading`}
+    >
       <div className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
         <Reveal>
           <div className="text-center">

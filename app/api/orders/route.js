@@ -66,7 +66,7 @@ export async function POST(request) {
 
   const customer_name = sanitizeText(body.name, 120);
   const phone = sanitizeText(body.phone, 30);
-  const city = sanitizeText(body.city, 80);
+  const address = sanitizeText(body.address, 500);
   const message = sanitizeText(body.message, 1000);
   const quantity = sanitizeQuantity(body.quantity);
 
@@ -78,6 +78,12 @@ export async function POST(request) {
     errors.phone = "Please enter your phone number.";
   } else if (!isValidPakistaniPhone(phone)) {
     errors.phone = "Enter a valid Pakistani mobile number, e.g. 03001234567.";
+  }
+  if (!address) {
+    errors.address = "Please enter your full shipping address.";
+  } else if (address.length < 10) {
+    errors.address =
+      "Please include house/street, area, and city so we can deliver.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -100,7 +106,8 @@ export async function POST(request) {
     const order = await Order.create({
       customer_name,
       phone,
-      city,
+      address,
+      city: "",
       quantity,
       message,
       status: "NEW",

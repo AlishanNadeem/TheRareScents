@@ -149,6 +149,7 @@ export default async function AdminDashboardPage() {
                       <PhoneActions
                         phone={order.phone}
                         customerName={order.customer_name}
+                        address={order.address}
                       />
                     </td>
                     <td className="py-2 pr-4 text-neutral-600">

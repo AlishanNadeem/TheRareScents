@@ -57,6 +57,14 @@ export default function SiteFooter() {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/#faq"
+                  className="transition-colors duration-300 hover:text-gold"
+                >
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </div>
 

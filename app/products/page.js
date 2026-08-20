@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import CategoryShortcuts from "@/components/CategoryShortcuts";
 import ProductCatalog from "@/components/ProductCatalog";
 import { getAllProducts } from "@/lib/products";
 import { siteConfig } from "@/lib/siteConfig";
@@ -23,6 +24,7 @@ export default async function ProductsPage() {
   return (
     <section className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-14 sm:py-16">
+        <CategoryShortcuts className="mb-8" />
         <Suspense fallback={<ProductsCatalogFallback />}>
           <ProductCatalog products={products} />
         </Suspense>

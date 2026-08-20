@@ -1,16 +1,15 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 import { submitOrder } from "@/lib/orders";
 import { isValidPakistaniPhone } from "@/lib/validation";
 import { formatPrice } from "@/lib/formatPrice";
 import { getEffectivePrice, isSaleActive } from "@/lib/pricing";
-import { siteConfig } from "@/lib/siteConfig";
 
 const initialForm = {
   name: "",
   phone: "",
-  city: "",
+  address: "",
   quantity: 1,
   message: "",
   company: "", // honeypot — real users never see or fill this in
@@ -33,7 +32,6 @@ function inputClasses(hasError) {
  * order to MongoDB.
  */
 export default function OrderForm({ product }) {
-  const citiesListId = useId();
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
@@ -61,6 +59,13 @@ export default function OrderForm({ product }) {
         "Enter a valid Pakistani mobile number, e.g. 03001234567.";
     }
 
+    if (!form.address.trim()) {
+      nextErrors.address = "Please enter your full shipping address.";
+    } else if (form.address.trim().length < 10) {
+      nextErrors.address =
+        "Please include house/street, area, and city so we can deliver.";
+    }
+
     return nextErrors;
   }
 
@@ -84,7 +89,7 @@ export default function OrderForm({ product }) {
         product_price: product ? getEffectivePrice(product) : null,
         name: form.name,
         phone: form.phone,
-        city: form.city,
+        address: form.address,
         quantity: form.quantity,
         message: form.message,
         // Spam honeypot: the backend silently rejects submissions where
@@ -253,26 +258,34 @@ export default function OrderForm({ product }) {
 
         <div>
           <label
-            htmlFor="city"
+            htmlFor="address"
             className="text-sm font-medium text-neutral-800"
           >
-            City
+            Shipping Address
           </label>
-          <input
-            id="city"
-            name="city"
-            type="text"
-            list={citiesListId}
-            placeholder="e.g. Karachi"
-            value={form.city}
+          <textarea
+            id="address"
+            name="address"
+            rows={3}
+            required
+            placeholder="House #, Street, Area, City"
+            value={form.address}
             onChange={handleChange}
-            className={inputClasses(false)}
+            aria-invalid={Boolean(errors.address)}
+            aria-describedby={
+              errors.address ? "order-address-error" : undefined
+            }
+            className={inputClasses(Boolean(errors.address))}
           />
-          <datalist id={citiesListId}>
-            {siteConfig.cities.map((city) => (
-              <option key={city} value={city} />
-            ))}
-          </datalist>
+          {errors.address && (
+            <p
+              id="order-address-error"
+              role="alert"
+              className="mt-1 text-xs text-red-600"
+            >
+              {errors.address}
+            </p>
+          )}
         </div>
 
         <div>
