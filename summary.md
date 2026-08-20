@@ -28,7 +28,7 @@ The business is **online-only** — no physical store, showroom, or fixed hours.
 
 **Categories:** For Him, For Her, Unisex, Attar/Oud.
 
-**Other storefront pieces:** Independence Day banner, announcement strip, floating WhatsApp button, cookie consent banner, Google Analytics (loads only after cookie consent, never on `/admin`).
+**Other storefront pieces:** announcement strip, floating WhatsApp button, cookie consent banner, Google Analytics (loads only after cookie consent, never on `/admin`).
 
 Prices are in **PKR**. Delivery cities highlighted in config: Karachi, Lahore, Islamabad, Rawalpindi.
 

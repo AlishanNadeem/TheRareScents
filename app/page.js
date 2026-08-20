@@ -7,7 +7,6 @@ import TrustStrip from "@/components/TrustStrip";
 import Testimonials from "@/components/Testimonials";
 import FAQSection from "@/components/FAQSection";
 import SocialSection from "@/components/SocialSection";
-import IndependenceDayBanner from "@/components/IndependenceDayBanner";
 import { faqPageJsonLd } from "@/lib/faq";
 import { buildMetadata, organizationJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
@@ -35,7 +34,6 @@ export default function HomePage() {
           __html: JSON.stringify(faqPageJsonLd()),
         }}
       />
-      <IndependenceDayBanner />
       <AnnouncementStrip />
       <Hero />
       <FeaturedProducts />
