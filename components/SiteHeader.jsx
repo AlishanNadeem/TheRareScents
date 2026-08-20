@@ -96,9 +96,8 @@ export default function SiteHeader() {
 
       <div
         id="mobile-nav-menu"
-        className={`overflow-hidden border-t border-gold/10 bg-ink transition-[max-height] duration-300 lg:hidden ${
-          menuOpen ? "max-h-96" : "max-h-0"
-        }`}
+        className={`overflow-hidden border-t border-gold/10 bg-ink transition-[max-height] duration-300 lg:hidden ${menuOpen ? "max-h-[32rem]" : "max-h-0"
+          }`}
       >
         <ul className="flex flex-col gap-1 px-6 py-4 text-sm text-paper/90">
           {navLinks.map((link) => (
