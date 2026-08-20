@@ -15,6 +15,12 @@ export default async function sitemap() {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    ...siteConfig.categories.map((category) => ({
+      url: `${siteConfig.url}${category.href}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    })),
     {
       url: `${siteConfig.url}/contact`,
       lastModified: new Date(),

@@ -22,7 +22,7 @@ export default function CategoryHighlights() {
           {siteConfig.categories.map((category) => (
             <StaggerItem key={category.slug}>
               <Link
-                href={`/products?category=${category.slug}`}
+                href={category.href}
                 className="group block overflow-hidden rounded-xl bg-ink/60 ring-1 ring-gold/15 transition duration-300 ease-out hover:scale-[1.03] hover:ring-gold/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold motion-reduce:hover:scale-100"
               >
                 <div className="relative aspect-square w-full overflow-hidden">

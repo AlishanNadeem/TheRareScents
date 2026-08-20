@@ -25,7 +25,11 @@ function ChevronIcon({ open }) {
   );
 }
 
-export default function FAQSection() {
+export default function FAQSection({
+  faqs = FAQS,
+  heading = "Frequently Asked Questions",
+  description = "Quick answers about delivery, authenticity, and ordering with The Rare Scents.",
+}) {
   const baseId = useId();
   // One open at a time — cleaner on mobile and easier to scan.
   const [openIndex, setOpenIndex] = useState(0);
@@ -43,11 +47,10 @@ export default function FAQSection() {
               id={`${baseId}-heading`}
               className="font-display text-2xl text-ink sm:text-3xl"
             >
-              Frequently Asked Questions
+              {heading}
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-600">
-              Quick answers about delivery, authenticity, and ordering with The
-              Rare Scents.
+              {description}
             </p>
           </div>
         </Reveal>
@@ -56,7 +59,7 @@ export default function FAQSection() {
           className="mt-10 divide-y divide-ink/10 border-y border-ink/10"
           delay={0.06}
         >
-          {FAQS.map((item, index) => {
+          {faqs.map((item, index) => {
             const open = openIndex === index;
             const panelId = `${baseId}-panel-${index}`;
             const buttonId = `${baseId}-button-${index}`;

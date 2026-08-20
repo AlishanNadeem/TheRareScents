@@ -8,9 +8,10 @@ import { siteConfig } from "@/lib/siteConfig";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/products" },
-  { label: "For Him", href: "/products?category=for-him" },
-  { label: "For Her", href: "/products?category=for-her" },
-  { label: "Attar/Oud", href: "/products?category=attar-oud" },
+  ...siteConfig.categories.map((category) => ({
+    label: category.label,
+    href: category.href,
+  })),
   { label: "Contact", href: "/contact" },
 ];
 

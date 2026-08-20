@@ -10,7 +10,7 @@ export default function SiteFooter() {
   return (
     <footer className="bg-ink text-paper/90">
       <div className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <h2 className="m-0">
               <Image
@@ -57,10 +57,18 @@ export default function SiteFooter() {
                   Contact Us
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-gold">
+              Shop by Category
+            </h3>
+            <ul className="mt-4 space-y-2 text-sm">
               {siteConfig.categories.map((category) => (
                 <li key={category.slug}>
                   <Link
-                    href={`/products?category=${category.slug}`}
+                    href={category.href}
                     className="transition-colors duration-300 hover:text-gold"
                   >
                     {category.label}
