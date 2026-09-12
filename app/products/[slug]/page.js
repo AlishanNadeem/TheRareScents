@@ -16,15 +16,23 @@ import { getAllProductSlugs, getProductBySlug } from "@/lib/products";
 import { breadcrumbJsonLd, buildMetadata, productJsonLd } from "@/lib/seo";
 import { getCategoryConfig, siteConfig } from "@/lib/siteConfig";
 
-// Revalidate periodically so new/updated products in MongoDB Atlas show up
-// without needing a full redeploy.
+// ISR: refresh periodically; admin edits also call revalidateStorefront(slug).
+// 60s keeps sale pricing / stock reasonably fresh without aggressive caching.
 export const revalidate = 60;
+
+// Allow newly created slugs after build (not only generateStaticParams set).
+export const dynamicParams = true;
 
 // Static params come from MongoDB Atlas via lib/products.js — swapping the
 // data source again later only means changing that file's implementation.
 export async function generateStaticParams() {
-  const slugs = await getAllProductSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllProductSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch (error) {
+    console.error("[products/[slug]] generateStaticParams failed", error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }) {
@@ -34,30 +42,38 @@ export async function generateMetadata({ params }) {
   // resolves metadata from this generateMetadata call for that render — the
   // sibling not-found.js's own metadata export isn't used in that path, so
   // the noindex fallback has to live here instead.
-  // Override the root layout's default "index, follow" so this segment
-  // doesn't send conflicting robots signals alongside the "noindex" tag
-  // Next.js automatically injects whenever notFound() fires during render.
   if (!product) {
-    return {
-      ...buildMetadata({
-        title: "Fragrance Not Found",
-        description: `This fragrance could not be found at ${siteConfig.name}.`,
-        path: `/products/${params.slug}`,
-      }),
+    return buildMetadata({
+      title: "Fragrance Not Found",
+      description: `This fragrance could not be found at ${siteConfig.name}.`,
+      path: `/products/${params.slug}`,
       robots: { index: false, follow: true },
-    };
+    });
   }
+
+  const description =
+    product.short_description ||
+    product.description ||
+    `Shop ${product.name} online in ${siteConfig.country} from ${siteConfig.name}.`;
+
+  const metaDescription =
+    `${description} Buy ${product.name} online in ${siteConfig.country} — delivered from ${siteConfig.primaryCity} with Cash on Delivery.`.slice(
+      0,
+      160
+    );
 
   return buildMetadata({
     title: `${product.name} — Buy Online in Pakistan`,
-    description: `${product.short_description} Shop ${product.name} online in ${siteConfig.country} — delivered from ${siteConfig.primaryCity} nationwide with Cash on Delivery.`,
+    description: metaDescription,
     path: `/products/${product.slug}`,
-    image: {
-      url: product.images[0],
-      width: 1200,
-      height: 1600,
-      alt: `${product.name} perfume by ${siteConfig.name}`,
-    },
+    image: product.images?.[0]
+      ? {
+          url: product.images[0],
+          width: 1200,
+          height: 1600,
+          alt: `${product.name} by ${siteConfig.name}`,
+        }
+      : undefined,
   });
 }
 
@@ -118,82 +134,107 @@ export default async function ProductPage({ params }) {
           <Breadcrumbs items={breadcrumbItems} />
         </div>
 
+        {/* SEO-critical product content is not wrapped in Reveal (opacity:0)
+            so crawlers and users see name, price, and description immediately. */}
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-          <Reveal>
-            <ProductGallery
-              images={product.images}
-              productName={product.name}
-              saleBadge={saleBadge}
-            />
-          </Reveal>
+          <ProductGallery
+            images={product.images}
+            productName={product.name}
+            saleBadge={saleBadge}
+          />
 
-          <Reveal delay={0.08}>
-            <div>
-              {categoryConfig ? (
-                <Link
-                  href={categoryConfig.href}
-                  className="text-xs uppercase tracking-wide text-gold transition-colors duration-300 hover:text-ink"
-                >
-                  {product.category}
-                </Link>
-              ) : (
-                <p className="text-xs uppercase tracking-wide text-gold">
-                  {product.category}
-                </p>
-              )}
-              <h1 className="mt-1 font-display text-3xl text-ink">
-                {product.name}
-              </h1>
-              <p className="mt-2 text-sm italic text-neutral-600">
-                {product.short_description}
-              </p>
-
-              <p className="mt-3 text-xl font-semibold text-neutral-900">
-                {saleActive ? (
-                  <>
-                    <span className="mr-2 text-base font-normal text-neutral-400 line-through">
-                      {formatPrice(product.price, product.currency)}
-                    </span>
-                    <span className="text-gold">
-                      {formatPrice(effectivePrice, product.currency)}
-                    </span>
-                  </>
-                ) : (
-                  formatPrice(product.price, product.currency)
-                )}{" "}
-                <span className="text-sm font-normal text-neutral-500">
-                  / {product.volume_ml}ml
-                </span>
-              </p>
-
-              <p className="mt-4 leading-relaxed text-neutral-700">
-                {product.description}
-              </p>
-
-              <p className="mt-4 text-sm font-medium">
-                {product.in_stock ? (
-                  <span className="text-gold">In Stock</span>
-                ) : (
-                  <span className="text-red-500">Sold Out</span>
-                )}
-              </p>
-
-              {hasFragranceNotes(product.notes) && (
-                <div className="mt-8 rounded-xl bg-ink/5 p-6">
-                  <NotesPyramid notes={product.notes} />
-                </div>
-              )}
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-auto"
+          <div>
+            {categoryConfig ? (
+              <Link
+                href={categoryConfig.href}
+                className="text-xs uppercase tracking-wide text-gold transition-colors duration-300 hover:text-ink"
               >
-                Order via WhatsApp
-              </a>
-            </div>
-          </Reveal>
+                {product.category}
+              </Link>
+            ) : (
+              <p className="text-xs uppercase tracking-wide text-gold">
+                {product.category}
+              </p>
+            )}
+            <h1 className="mt-1 font-display text-3xl text-ink">
+              {product.name}
+            </h1>
+            <p className="mt-2 text-sm italic text-neutral-600">
+              {product.short_description}
+            </p>
+
+            <p className="mt-3 text-xl font-semibold text-neutral-900">
+              {saleActive ? (
+                <>
+                  <span className="mr-2 text-base font-normal text-neutral-400 line-through">
+                    {formatPrice(product.price, product.currency)}
+                  </span>
+                  <span className="text-gold">
+                    {formatPrice(effectivePrice, product.currency)}
+                  </span>
+                </>
+              ) : (
+                formatPrice(product.price, product.currency)
+              )}{" "}
+              <span className="text-sm font-normal text-neutral-500">
+                / {product.volume_ml}ml
+              </span>
+            </p>
+
+            <p className="mt-4 leading-relaxed text-neutral-700">
+              {product.description}
+            </p>
+
+            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-neutral-700 sm:grid-cols-3">
+              {product.category ? (
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-neutral-500">
+                    Category
+                  </dt>
+                  <dd className="mt-0.5 font-medium text-ink">
+                    {product.category}
+                  </dd>
+                </div>
+              ) : null}
+              {product.volume_ml ? (
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-neutral-500">
+                    Size
+                  </dt>
+                  <dd className="mt-0.5 font-medium text-ink">
+                    {product.volume_ml}ml
+                  </dd>
+                </div>
+              ) : null}
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-neutral-500">
+                  Availability
+                </dt>
+                <dd className="mt-0.5 font-medium">
+                  {product.in_stock ? (
+                    <span className="text-gold">In Stock</span>
+                  ) : (
+                    <span className="text-red-500">Sold Out</span>
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {hasFragranceNotes(product.notes) && (
+              <div className="mt-8 rounded-xl bg-ink/5 p-6">
+                <NotesPyramid notes={product.notes} />
+              </div>
+            )}
+
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3 text-sm font-semibold uppercase tracking-wide text-espresso shadow-sm transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#d4af5a] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-auto"
+            >
+              Order via WhatsApp
+            </a>
+          </div>
         </div>
 
         <Reveal className="mx-auto mt-12 max-w-md" delay={0.1}>

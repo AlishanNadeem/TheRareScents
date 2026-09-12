@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import ProductGrid from "@/components/ProductGrid";
 import { Reveal } from "@/components/Reveal";
 import { getEffectivePrice, isSaleActive } from "@/lib/pricing";
@@ -21,62 +22,53 @@ function pillClasses(active) {
   }`;
 }
 
-function categoryFromSearchParams(searchParams) {
-  const slug = searchParams.get("category");
-  if (!slug) return "all";
-  return siteConfig.categories.find((c) => c.slug === slug)?.value ?? "all";
-}
-
-function saleFromSearchParams(searchParams) {
-  const sale = searchParams.get("sale");
-  return sale === "1" || sale === "true";
-}
-
 function matchesCategory(product, categoryValue) {
   return (
     String(product?.category ?? "").trim() === String(categoryValue).trim()
   );
 }
 
-export default function ProductCatalog({ products }) {
+/**
+ * Interactive catalog filters. Initial filter state comes from the Server
+ * Component (searchParams) so the product grid is present in the first HTML
+ * response — do not use useSearchParams here (it forces a Suspense fallback
+ * shell with no crawlable product links).
+ */
+export default function ProductCatalog({
+  products,
+  initialCategory = "all",
+  initialOnSale = false,
+}) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const [category, setCategory] = useState(() =>
-    categoryFromSearchParams(searchParams)
-  );
-  const [onSaleOnly, setOnSaleOnly] = useState(() =>
-    saleFromSearchParams(searchParams)
-  );
+  const [category, setCategory] = useState(initialCategory);
+  const [onSaleOnly, setOnSaleOnly] = useState(initialOnSale);
   const [sort, setSort] = useState("default");
 
-  // Keep local filters in sync when the URL changes (header/footer/sale links).
+  // Keep local filters in sync when the server re-renders with new searchParams
+  // (header/footer/sale links, back/forward).
   useEffect(() => {
-    const nextCategory = categoryFromSearchParams(searchParams);
-    const nextSale = saleFromSearchParams(searchParams);
-    setCategory(nextCategory);
-    setOnSaleOnly(nextSale);
-  }, [searchParams]);
+    setCategory(initialCategory);
+    setOnSaleOnly(initialOnSale);
+  }, [initialCategory, initialOnSale]);
 
   function updateUrl({ nextCategory = category, nextSale = onSaleOnly }) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
 
-    if (nextCategory === "all") {
-      params.delete("category");
-    } else {
+    if (nextCategory !== "all") {
       const slug = siteConfig.categories.find(
         (c) => c.value === nextCategory
       )?.slug;
       if (slug) params.set("category", slug);
-      else params.delete("category");
     }
 
     if (nextSale) params.set("sale", "1");
-    else params.delete("sale");
 
     const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
   }
 
   function selectCategory(nextCategory) {
@@ -154,23 +146,30 @@ export default function ProductCatalog({ products }) {
           aria-label="Filter by category"
           className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0"
         >
-          <button
-            type="button"
+          <Link
+            href={onSaleOnly ? "/products?sale=1" : "/products"}
+            scroll={false}
             onClick={() => selectCategory("all")}
             className={`shrink-0 ${pillClasses(category === "all")}`}
           >
             All
-          </button>
-          {siteConfig.categories.map((c) => (
-            <button
-              key={c.slug}
-              type="button"
-              onClick={() => selectCategory(c.value)}
-              className={`shrink-0 ${pillClasses(category === c.value)}`}
-            >
-              {c.label}
-            </button>
-          ))}
+          </Link>
+          {siteConfig.categories.map((c) => {
+            const params = new URLSearchParams();
+            params.set("category", c.slug);
+            if (onSaleOnly) params.set("sale", "1");
+            return (
+              <Link
+                key={c.slug}
+                href={`/products?${params.toString()}`}
+                scroll={false}
+                onClick={() => selectCategory(c.value)}
+                className={`shrink-0 ${pillClasses(category === c.value)}`}
+              >
+                {c.label}
+              </Link>
+            );
+          })}
           <button
             type="button"
             onClick={toggleOnSale}

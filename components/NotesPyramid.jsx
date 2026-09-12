@@ -14,6 +14,9 @@ export default function NotesPyramid({ notes }) {
 
   return (
     <div className="space-y-4">
+      <h2 className="text-center font-display text-lg text-ink">
+        Fragrance Notes
+      </h2>
       {TIERS.map((tier) => {
         const items = notes[tier.key] ?? [];
         if (!items.length) return null;
@@ -23,9 +26,9 @@ export default function NotesPyramid({ notes }) {
             key={tier.key}
             className={`mx-auto text-center ${tier.widthClass}`}
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-gold">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-gold">
               {tier.label}
-            </p>
+            </h3>
             <ul className="mt-2 flex flex-wrap justify-center gap-2">
               {items.map((note) => (
                 <li

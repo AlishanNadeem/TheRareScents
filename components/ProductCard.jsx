@@ -6,7 +6,6 @@ import {
   getSaleBadgeLabel,
   isSaleActive,
 } from "@/lib/pricing";
-import { siteConfig } from "@/lib/siteConfig";
 
 export default function ProductCard({ product, priority = false }) {
   const saleActive = isSaleActive(product);
@@ -22,7 +21,7 @@ export default function ProductCard({ product, priority = false }) {
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100">
           <Image
             src={product.images[0]}
-            alt={`${product.name} perfume bottle by ${siteConfig.name} — original fragrance in Pakistan`}
+            alt={product.name}
             fill
             priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

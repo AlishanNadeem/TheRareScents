@@ -30,12 +30,8 @@ export const metadata = {
   keywords: siteConfig.keywords,
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.name }],
-  alternates: {
-    canonical: "/",
-    languages: {
-      "en-PK": "/",
-    },
-  },
+  // Canonical / hreflang are set per-page via buildMetadata() — do not set a
+  // site-wide homepage canonical here or every route can inherit "/" .
   openGraph: {
     title: `${siteConfig.name} | Buy Original Perfumes Online in Pakistan`,
     description: siteConfig.description,

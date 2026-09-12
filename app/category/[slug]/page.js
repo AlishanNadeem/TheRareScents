@@ -1,9 +1,6 @@
 import { notFound } from "next/navigation";
 import CategoryLanding from "@/components/CategoryLanding";
-import {
-  CATEGORY_SLUGS,
-  getCategoryPage,
-} from "@/lib/categoryPages";
+import { CATEGORY_SLUGS, getCategoryPage } from "@/lib/categoryPages";
 import { getProductsByCategory } from "@/lib/products";
 import { faqPageJsonLd } from "@/lib/faq";
 import {
@@ -26,6 +23,7 @@ export async function generateMetadata({ params }) {
       title: "Category Not Found",
       description: "This fragrance category could not be found.",
       path: `/category/${params.slug}`,
+      robots: { index: false, follow: true },
     });
   }
 

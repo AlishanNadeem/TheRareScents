@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { siteConfig } from "@/lib/siteConfig";
 
 export default function ProductGallery({
   images,
@@ -19,7 +18,7 @@ export default function ProductGallery({
         {activeImage && (
           <Image
             src={activeImage}
-            alt={`${productName} perfume by ${siteConfig.name} — image ${activeIndex + 1} of ${gallery.length}`}
+            alt={`${productName} — image ${activeIndex + 1} of ${gallery.length}`}
             fill
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
@@ -55,7 +54,7 @@ export default function ProductGallery({
             >
               <Image
                 src={src}
-                alt={`${productName} thumbnail ${index + 1} — ${siteConfig.name}`}
+                alt={`${productName} thumbnail ${index + 1}`}
                 fill
                 sizes="64px"
                 className="object-cover"

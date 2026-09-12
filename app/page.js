@@ -12,7 +12,10 @@ import { buildMetadata, organizationJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 
 export const metadata = buildMetadata({
-  title: `${siteConfig.name} | Buy Original Perfumes Online in Pakistan`,
+  // absolute avoids the root title template doubling the brand name
+  title: {
+    absolute: `${siteConfig.name} | Buy Original Perfumes Online in Pakistan`,
+  },
   description: `Shop original perfumes, oud & attars online in ${siteConfig.country}. ${siteConfig.name} curates rare oils and exclusive blends, delivered from ${siteConfig.primaryCity} nationwide.`,
   path: "/",
 });
